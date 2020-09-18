@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:chess/utils/cell_coordinate.dart';
+import 'package:chess/utils/main.dart';
 
-import 'figure/figure.dart';
+import '../models/main.dart';
+
+import './figure.widget.dart';
 
 enum CellType {
   white,
@@ -47,8 +49,6 @@ class Cell extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(4),
-      // child: Center(child: Text('${this.x}${this.y}', style: TextStyle(color: themeTextColors[this.type]))),
-      // child: Center(child: new Figure(type: FigureType.pawn, color: FigureColor.white)),
       child: Stack(
         children: stackChildren,
       ),

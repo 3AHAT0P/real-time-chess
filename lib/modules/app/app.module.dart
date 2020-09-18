@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_modular/flutter_modular.dart';
 
-import './pages/main.dart';
-import './app.widget.dart';
+import 'services/field/field.bloc.dart';
+import 'pages/main.dart';
+import 'app.widget.dart';
 
 // app_module.dart
 class AppModule extends MainModule {
 
   // Provide a list of dependencies to inject into your project
   @override
-  List<Bind> get binds => [];
+  List<Bind> get binds => [
+    Bind((inject) => FieldBloc()),
+  ];
 
   // Provide all the routes for your module
   @override

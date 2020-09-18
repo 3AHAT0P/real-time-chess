@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import 'package:chess/utils/cell_coordinate.dart';
+import 'package:chess/utils/classes/cell_coordinate.dart';
 
 enum FigureColor {
   black,
@@ -22,48 +23,17 @@ enum FigureAction {
   transform,
 }
 
-Map<FigureType, String> whiteFigureImageUrl = {
-  FigureType.pawn: 'w_pawn_png_shadow_256px.png',
-  FigureType.knight: 'w_knight_png_shadow_256px.png',
-  FigureType.bishop: 'w_bishop_png_shadow_256px.png',
-  FigureType.rook: 'w_rook_png_shadow_256px.png',
-  FigureType.queen: 'w_queen_png_shadow_256px.png',
-  FigureType.king: 'w_king_png_shadow_256px.png',
-};
-
-Map<FigureType, String> blackFigureImageUrl = {
-  FigureType.pawn: 'b_pawn_png_shadow_256px.png',
-  FigureType.knight: 'b_knight_png_shadow_256px.png',
-  FigureType.bishop: 'b_bishop_png_shadow_256px.png',
-  FigureType.rook: 'b_rook_png_shadow_256px.png',
-  FigureType.queen: 'b_queen_png_shadow_256px.png',
-  FigureType.king: 'b_king_png_shadow_256px.png',
-};
-
-class FigureWidget extends StatelessWidget {
-  final Figure model;
-  final String imageName;
-
-  FigureWidget({Key key, this.model}):
-    imageName = (model.color == FigureColor.white ? whiteFigureImageUrl : blackFigureImageUrl)[model.type],
-    super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return new Image.asset(
-      'assets/images/$imageName',
-      fit: BoxFit.cover,
-    );
-  }
-}
-
-abstract class Figure {
+@immutable
+abstract class Figure extends Equatable {
   final FigureColor color;
   final FigureType type;
   
-  Figure({this.type, this.color});
+  Figure({@required this.type, @required this.color});
 
   Map<CellCoordinate, FigureAction> getPossibleCells(CellCoordinate current, Map<CellCoordinate, Figure> figuresPlacement);
+
+  @override
+  List<Object> get props => [type, color];
 }
 
 class Pawn extends Figure {
@@ -231,11 +201,7 @@ class Bishop extends Figure {
 }
 
 class Queen extends Figure {
-  final int yModificator;
-
-  Queen({FigureColor color}):
-    yModificator = color == FigureColor.white ? 1 : -1,
-    super(type: FigureType.queen, color: color);
+  Queen({FigureColor color}): super(type: FigureType.queen, color: color);
 
   Map<CellCoordinate, FigureAction> _moveTo(
     CellCoordinate position,
@@ -279,12 +245,7 @@ class Queen extends Figure {
 }
 
 class King extends Figure {
-  final int yModificator;
-
-  King({FigureColor color}):
-    yModificator = color == FigureColor.white ? 1 : -1,
-    super(type: FigureType.king, color: color);
-
+  King({FigureColor color}): super(type: FigureType.king, color: color);
 
   Map<CellCoordinate, FigureAction> _moveTo(
     CellCoordinate position,
