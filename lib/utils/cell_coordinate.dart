@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -6,7 +7,7 @@ const min = 1;
 const max = 8;
 
 @immutable
-class CellCoordinate {
+class CellCoordinate extends Equatable {
   CellCoordinate({ this.x, this.y });
 
   static CellCoordinate fromString(String index) {
@@ -25,10 +26,7 @@ class CellCoordinate {
   }
 
   @override
-  int get hashCode => x.hashCode ^ y.hashCode;
-
-  @override
-  bool operator ==(Object other) => other is CellCoordinate && other.x == x && other.y == y;
+  List<Object> get props => [x, y];
 
   CellCoordinate addX(int value) {
     final newValue = x + value;
