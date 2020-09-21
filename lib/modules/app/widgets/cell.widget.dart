@@ -4,7 +4,7 @@ import 'package:chess/utils/main.dart';
 
 import '../models/main.dart';
 
-import './figure.widget.dart';
+import 'figure.widget.dart';
 
 enum CellType {
   white,

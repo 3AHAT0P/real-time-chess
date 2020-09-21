@@ -51,15 +51,16 @@ class Pawn extends Figure {
       if (move.y == 8 && color == FigureColor.white) result[move] = FigureAction.transform;
       else if (move.y == 1 && color == FigureColor.black) result[move] = FigureAction.transform;
       else result[move] = FigureAction.move;
-    }
-    if (
-      (current.y == 2 && color == FigureColor.white)
-      || (current.y == 7 && color == FigureColor.black)
-    ) {
-      final newPosition = current.addY(yModificator * 2);
-      if (!figuresPlacement.containsKey(newPosition)) result[newPosition] = FigureAction.move;
+      if (
+        (current.y == 2 && color == FigureColor.white)
+        || (current.y == 7 && color == FigureColor.black)
+      ) {
+        final newPosition = current.addY(yModificator * 2);
+        if (!figuresPlacement.containsKey(newPosition)) result[newPosition] = FigureAction.move;
+      }
     }
 
+    debugPrint('!@#!@#!@#!@#!@#, $result');
     return result;
   }
 
@@ -77,11 +78,12 @@ class Pawn extends Figure {
 
     final attackRight = current.add(CellCoordinate(x: 1, y: yModificator));
     if (
-      attackLeft != current
+      attackRight != current
       && figuresPlacement[attackRight] != null
       && figuresPlacement[attackRight].color != color
     ) result[attackRight] = FigureAction.attack;
 
+    debugPrint('!@#!@#!@#!@#!@#, $result');
     return result;
   }
 

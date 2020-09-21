@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:meta/meta.dart';
 
 import 'package:chess/modules/app/models/main.dart';
@@ -10,8 +11,8 @@ import 'package:chess/utils/main.dart';
 part 'field.event.dart';
 part 'field.state.dart';
 
-class FieldBloc extends Bloc<FieldEvent, FieldState> {
-  FieldBloc() : super(FieldInitial());
+class FieldBloc extends Bloc<FieldEvent, FieldState> implements Disposable {
+  FieldBloc() : super(FieldState());
 
   @override
   Stream<FieldState> mapEventToState(
@@ -24,13 +25,14 @@ class FieldBloc extends Bloc<FieldEvent, FieldState> {
 
   FieldState _startMove(FieldState state, FieldFigureMoveStart event) {
     if (state.selectedIndex != null) return state;
+
     final _figure = state.figuresPlacement[event.position];
     if (_figure == null) return state;
 
-    state.selectedIndex = event.position;
-    state.movePossiblePositions = _figure.getPossibleCells(event.position, state.figuresPlacement);
-    
-    return state;
+    return state.update(
+      selectedIndex: event.position,
+      movePossiblePositions: _figure.getPossibleCells(event.position, state.figuresPlacement),
+    );
   }
 
   FieldState _endMove(FieldState state, FieldFigureMoveEnd event) {
@@ -41,14 +43,19 @@ class FieldBloc extends Bloc<FieldEvent, FieldState> {
     if (!state.movePossiblePositions.containsKey(event.position)) {
       state.selectedIndex = null;
       state.movePossiblePositions = new Map<CellCoordinate, FigureAction>();
-      return state;
+      return state.update(
+        selectedIndex: null,
+        movePossiblePositions: new Map<CellCoordinate, FigureAction>(),
+      );
     }
 
     state.figuresPlacement[event.position] = state.figuresPlacement[state.selectedIndex];
     state.figuresPlacement.remove(state.selectedIndex);
-    state.selectedIndex = null;
-    state.movePossiblePositions = new Map<CellCoordinate, FigureAction>();
-    return state;
+
+    return state.update(
+      selectedIndex: null,
+      movePossiblePositions: new Map<CellCoordinate, FigureAction>(),
+    );
   }
 
   FieldState _newGame(FieldState state, FieldCreateNewGame event) {
@@ -57,5 +64,10 @@ class FieldBloc extends Bloc<FieldEvent, FieldState> {
     state.movePossiblePositions = new Map<CellCoordinate, FigureAction>();
 
     return state;
+  }
+
+  @override
+  void dispose() {
+    this.close();
   }
 }

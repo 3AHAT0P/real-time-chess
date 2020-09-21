@@ -3,7 +3,7 @@ import 'package:chess/modules/app/services/field/field.bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../widgets/field.dart';
+import '../widgets/field.widget.dart';
 
 class HomePage extends ModularStatelessWidget<AppModule> {
   final String title;

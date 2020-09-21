@@ -5,7 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:chess/modules/app/services/field/field.bloc.dart';
 import 'package:chess/utils/main.dart';
 
-import 'cell.dart';
+import 'cell.widget.dart';
 
 class Field extends StatefulWidget {
   Field({Key key}) : super(key: key);
@@ -17,19 +17,26 @@ class Field extends StatefulWidget {
 class _FieldState extends ModularState<Field, FieldBloc> {
   Size _cellSize;
 
+  _FieldState() {
+    controller.listen((data) {
+      debugPrint('!!!!!!!!!!!!, $data');
+    });
+  }
+
   CellCoordinate _normalizeCoordinates(Offset position) {
     final _x = position.dx ~/ _cellSize.width + 1;
     final _y = 8 - position.dy ~/ _cellSize.height;
 
     return new CellCoordinate(x: _x, y: _y);
   }
+
   void _updateCellSize(size) {
     setState(() => _cellSize = size);
   }
 
   Widget _buildCell(FieldItem item, bool isWhite) {
     final _figure = controller.state.figuresPlacement[item.position];
-
+    debugPrint('_buildCell, ${controller.state.movePossiblePositions}');
     return Cell(
       key: item.key,
       type: isWhite ? CellType.white : CellType.black,
@@ -41,6 +48,8 @@ class _FieldState extends ModularState<Field, FieldBloc> {
   
   Widget _buildGrid() {
     var _isWhite = false;
+
+    debugPrint('!!!!!!!!!!!1 _buildGrid');
 
     return GridView.count(
       crossAxisCount: 8,
@@ -56,6 +65,8 @@ class _FieldState extends ModularState<Field, FieldBloc> {
 
   @override
   Widget build(BuildContext context) {
+
+    debugPrint('!!!!!!!!!!!1 build');
     return Listener(
       onPointerDown: (details) {
         controller.add(FieldFigureMoveStart(position: _normalizeCoordinates(details.localPosition)));

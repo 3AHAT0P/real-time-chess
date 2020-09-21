@@ -52,13 +52,30 @@ List<FieldItem> items = List.generate(64, (index) {
   );
 });
 
-abstract class FieldState {
+class FieldState {
   Map<CellCoordinate, Figure> figuresPlacement = new Map<CellCoordinate, Figure>.from(defaultFigurePlacement);
 
   CellCoordinate selectedIndex;
   Map<CellCoordinate, FigureAction> movePossiblePositions = new Map<CellCoordinate, FigureAction>();
-}
 
-class FieldInitial extends FieldState {
-  
+  FieldState();
+
+  FieldState._({
+    this.figuresPlacement,
+    this.selectedIndex,
+    this.movePossiblePositions,
+  });
+
+  FieldState update({
+    Map<CellCoordinate, Figure> figuresPlacement,
+    CellCoordinate selectedIndex,
+    Map<CellCoordinate, FigureAction> movePossiblePositions,
+  }) {
+    debugPrint('------------- ${movePossiblePositions}');
+    return FieldState._(
+      figuresPlacement: figuresPlacement ?? this.figuresPlacement,
+      selectedIndex: selectedIndex ?? this.selectedIndex,
+      movePossiblePositions: movePossiblePositions ?? this.movePossiblePositions,
+    );
+  }
 }
