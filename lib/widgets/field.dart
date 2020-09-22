@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:provider/provider.dart';
 
-import 'package:chess/modules/app/services/field/field.bloc.dart';
+import 'package:chess/services/main.dart';
 import 'package:chess/utils/main.dart';
 
-import 'cell.widget.dart';
+import 'cell.dart';
 
-class Field extends StatefulWidget {
-  Field({Key key}) : super(key: key);
+class FieldWidget extends StatefulWidget {
+  FieldWidget({Key key}) : super(key: key);
 
   @override
   _FieldState createState() => _FieldState();
 }
 
-class _FieldState extends ModularState<Field, FieldBloc> {
+class _FieldState extends State<FieldWidget> {
   Size _cellSize;
-
-  _FieldState() {
-    controller.listen((data) {
-      debugPrint('!!!!!!!!!!!!, $data');
-    });
-  }
 
   CellCoordinate _normalizeCoordinates(Offset position) {
     final _x = position.dx ~/ _cellSize.width + 1;
@@ -35,21 +29,19 @@ class _FieldState extends ModularState<Field, FieldBloc> {
   }
 
   Widget _buildCell(FieldItem item, bool isWhite) {
-    final _figure = controller.state.figuresPlacement[item.position];
-    debugPrint('_buildCell, ${controller.state.movePossiblePositions}');
-    return Cell(
+    final _figure = context.watch<GameService>().figuresPlacement[item.position];
+
+    return CellWidget(
       key: item.key,
       type: isWhite ? CellType.white : CellType.black,
       position: item.position,
       figure: _figure,
-      showCircle: controller.state.movePossiblePositions.containsKey(item.position),
+      showCircle: context.watch<GameService>().movePossiblePositions.containsKey(item.position),
     );
   }
   
   Widget _buildGrid() {
     var _isWhite = false;
-
-    debugPrint('!!!!!!!!!!!1 _buildGrid');
 
     return GridView.count(
       crossAxisCount: 8,
@@ -65,14 +57,12 @@ class _FieldState extends ModularState<Field, FieldBloc> {
 
   @override
   Widget build(BuildContext context) {
-
-    debugPrint('!!!!!!!!!!!1 build');
     return Listener(
       onPointerDown: (details) {
-        controller.add(FieldFigureMoveStart(position: _normalizeCoordinates(details.localPosition)));
+        context.read<GameService>().startMove(_normalizeCoordinates(details.localPosition));
       },
       onPointerUp: (details) {
-        controller.add(FieldFigureMoveEnd(position: _normalizeCoordinates(details.localPosition)));
+        context.read<GameService>().endMove(_normalizeCoordinates(details.localPosition));
       },
       child: _buildGrid(),
     );

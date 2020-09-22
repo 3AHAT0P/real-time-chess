@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:chess/models/main.dart';
 import 'package:chess/utils/main.dart';
 
-import '../models/main.dart';
-
-import 'figure.widget.dart';
+import 'figure.dart';
 
 enum CellType {
   white,
@@ -21,8 +20,8 @@ Map<CellType, Color> themeBackColors = {
   CellType.black: Colors.black,
 };
 
-class Cell extends StatelessWidget {
-  Cell({Key key, this.type, this.position, this.figure, this.showCircle}) : super(key: key);
+class CellWidget extends StatelessWidget {
+  CellWidget({Key key, this.type, this.position, this.figure, this.showCircle}) : super(key: key);
 
   @required final CellType type;
   @required final CellCoordinate position;

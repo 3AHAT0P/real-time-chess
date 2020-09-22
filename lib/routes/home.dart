@@ -1,11 +1,10 @@
-import 'package:chess/modules/app/app.module.dart';
-import 'package:chess/modules/app/services/field/field.bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:provider/provider.dart';
 
-import '../widgets/field.widget.dart';
+import 'package:chess/services/main.dart';
+import 'package:chess/widgets/main.dart';
 
-class HomePage extends ModularStatelessWidget<AppModule> {
+class HomePage extends StatelessWidget {
   final String title;
 
   HomePage({Key key, this.title}) : super(key: key);
@@ -17,10 +16,10 @@ class HomePage extends ModularStatelessWidget<AppModule> {
         title: Text(title),
       ),
       body: Center(
-        child: Field(),
+        child: FieldWidget(),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Modular.get<FieldBloc>().add(FieldCreateNewGame()),
+        onPressed: () => context.read<GameService>().newGame(),
         tooltip: 'Start new game',
         icon: const Icon(Icons.add),
         label: const Text('Start new game'),

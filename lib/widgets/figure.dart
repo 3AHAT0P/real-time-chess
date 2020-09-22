@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/figure.dart';
+import 'package:chess/models/main.dart';
 
 Map<FigureType, String> _whiteFigureImageUrl = {
   FigureType.pawn: 'w_pawn_png_shadow_256px.png',

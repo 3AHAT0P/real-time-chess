@@ -1,4 +1,7 @@
-part of 'field.bloc.dart';
+import 'package:flutter/widgets.dart';
+
+import 'package:chess/models/main.dart';
+import 'package:chess/utils/main.dart';
 
 Map<CellCoordinate, Figure> defaultFigurePlacement = {
   CellCoordinate.fromString('A1'): new Rook(color: FigureColor.white),
@@ -52,30 +55,49 @@ List<FieldItem> items = List.generate(64, (index) {
   );
 });
 
-class FieldState {
-  Map<CellCoordinate, Figure> figuresPlacement = new Map<CellCoordinate, Figure>.from(defaultFigurePlacement);
+class GameService with ChangeNotifier {
+  Map<CellCoordinate, Figure> _figuresPlacement = new Map<CellCoordinate, Figure>.from(defaultFigurePlacement);
 
-  CellCoordinate selectedIndex;
-  Map<CellCoordinate, FigureAction> movePossiblePositions = new Map<CellCoordinate, FigureAction>();
+  CellCoordinate _selectedIndex;
+  Map<CellCoordinate, FigureAction> _movePossiblePositions = new Map<CellCoordinate, FigureAction>();
 
-  FieldState();
+  Map<CellCoordinate, Figure> get figuresPlacement => _figuresPlacement;
+  CellCoordinate get selectedIndex => _selectedIndex;
+  Map<CellCoordinate, FigureAction> get movePossiblePositions => _movePossiblePositions;
 
-  FieldState._({
-    this.figuresPlacement,
-    this.selectedIndex,
-    this.movePossiblePositions,
-  });
+  void startMove(CellCoordinate position) {
+    if (_selectedIndex != null) return;
 
-  FieldState update({
-    Map<CellCoordinate, Figure> figuresPlacement,
-    CellCoordinate selectedIndex,
-    Map<CellCoordinate, FigureAction> movePossiblePositions,
-  }) {
-    debugPrint('------------- ${movePossiblePositions}');
-    return FieldState._(
-      figuresPlacement: figuresPlacement ?? this.figuresPlacement,
-      selectedIndex: selectedIndex ?? this.selectedIndex,
-      movePossiblePositions: movePossiblePositions ?? this.movePossiblePositions,
-    );
+    final _figure = _figuresPlacement[position];
+    if (_figure == null) return;
+
+    _selectedIndex = position;
+    _movePossiblePositions = _figure.getPossibleCells(position, _figuresPlacement);
+
+    notifyListeners();
+  }
+
+  void endMove(CellCoordinate position) {
+    if (_selectedIndex == null) return;
+
+    if (position == _selectedIndex) return;
+
+    if (_movePossiblePositions.containsKey(position)) {
+      _figuresPlacement[position] = _figuresPlacement[_selectedIndex];
+      _figuresPlacement.remove(_selectedIndex);
+    }
+
+    _selectedIndex = null;
+    _movePossiblePositions = new Map<CellCoordinate, FigureAction>();
+
+    notifyListeners();
+  }
+
+  void newGame() {
+    _figuresPlacement = defaultFigurePlacement;
+    _selectedIndex = null;
+    _movePossiblePositions = new Map<CellCoordinate, FigureAction>();
+
+    notifyListeners();
   }
 }
