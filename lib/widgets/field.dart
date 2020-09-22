@@ -29,14 +29,10 @@ class _FieldState extends State<FieldWidget> {
   }
 
   Widget _buildCell(FieldItem item, bool isWhite) {
-    final _figure = context.watch<GameService>().figuresPlacement[item.position];
-
     return CellWidget(
       key: item.key,
       type: isWhite ? CellType.white : CellType.black,
       position: item.position,
-      figure: _figure,
-      showCircle: context.watch<GameService>().movePossiblePositions.containsKey(item.position),
     );
   }
   

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:chess/models/main.dart';
 import 'package:chess/utils/main.dart';
+
+import 'package:chess/services/main.dart';
 
 import 'figure.dart';
 
@@ -21,20 +24,24 @@ Map<CellType, Color> themeBackColors = {
 };
 
 class CellWidget extends StatelessWidget {
-  CellWidget({Key key, this.type, this.position, this.figure, this.showCircle}) : super(key: key);
+  CellWidget({Key key, this.type, this.position}) : super(key: key);
 
   @required final CellType type;
   @required final CellCoordinate position;
-  final Figure figure;
-  final bool showCircle;
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('_buildCell ${position}');
+
     final List<Widget> stackChildren = [
-      Center(child: Text('${this.position.toString()}', style: TextStyle(color: themeTextColors[this.type]))),
+      Center(child: Text('${this.position.toString()}', style: TextStyle(color: themeTextColors[type]))),
     ];
-    if (figure != null) stackChildren.add(Center(child: FigureWidget(model: this.figure)));
-    if (showCircle) stackChildren.add(Center(child: FractionallySizedBox(
+
+    final _figure = context.watch<GameService>().figuresPlacement[position];
+    if (_figure != null) stackChildren.add(Center(child: FigureWidget(model: _figure)));
+
+    final _showCircle = context.watch<GameService>().movePossiblePositions.containsKey(position);
+    if (_showCircle) stackChildren.add(Center(child: FractionallySizedBox(
       widthFactor: 0.3,
       heightFactor: 0.3,
       child: Container(

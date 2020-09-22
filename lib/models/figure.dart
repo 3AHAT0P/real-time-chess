@@ -60,7 +60,6 @@ class Pawn extends Figure {
       }
     }
 
-    debugPrint('!@#!@#!@#!@#!@#, $result');
     return result;
   }
 
@@ -83,7 +82,6 @@ class Pawn extends Figure {
       && figuresPlacement[attackRight].color != color
     ) result[attackRight] = FigureAction.attack;
 
-    debugPrint('!@#!@#!@#!@#!@#, $result');
     return result;
   }
 
