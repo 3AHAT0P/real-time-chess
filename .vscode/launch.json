@@ -5,9 +5,22 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "chess",
+      "name": "Chess: Test all",
+      "type": "dart",
       "request": "launch",
-      "type": "dart"
-    }
+      "program": "./test/"
+    },
+    {
+      "name": "Chess:dev",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main-dev.dart"
+    },
+    {
+      "name": "Chess",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart"
+    },
   ]
 }

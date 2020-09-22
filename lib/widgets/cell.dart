@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,25 +24,32 @@ Map<CellType, Color> themeBackColors = {
   CellType.black: Colors.black,
 };
 
+
+@immutable
+class ExternalData extends Equatable {
+  final Figure figure;
+  final bool showCircle;
+
+  ExternalData({ this.figure, this.showCircle });
+
+  @override
+  List<Object> get props => [figure, showCircle];
+}
+
 class CellWidget extends StatelessWidget {
   CellWidget({Key key, this.type, this.position}) : super(key: key);
 
   @required final CellType type;
   @required final CellCoordinate position;
 
-  @override
-  Widget build(BuildContext context) {
-    debugPrint('_buildCell ${position}');
-
+  Widget _build(ExternalData data) {
     final List<Widget> stackChildren = [
       Center(child: Text('${this.position.toString()}', style: TextStyle(color: themeTextColors[type]))),
     ];
 
-    final _figure = context.watch<GameService>().figuresPlacement[position];
-    if (_figure != null) stackChildren.add(Center(child: FigureWidget(model: _figure)));
+    if (data.figure != null) stackChildren.add(Center(child: FigureWidget(model: data.figure)));
 
-    final _showCircle = context.watch<GameService>().movePossiblePositions.containsKey(position);
-    if (_showCircle) stackChildren.add(Center(child: FractionallySizedBox(
+    if (data.showCircle) stackChildren.add(Center(child: FractionallySizedBox(
       widthFactor: 0.3,
       heightFactor: 0.3,
       child: Container(
@@ -59,6 +67,18 @@ class CellWidget extends StatelessWidget {
         children: stackChildren,
       ),
       color: themeBackColors[this.type],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<GameService, ExternalData>(
+      selector: (_, gameService) => ExternalData(
+        figure: gameService.figuresPlacement[position],
+        showCircle: gameService.movePossiblePositions.containsKey(position),
+      ),
+      // shouldRebuild: (ExternalData a, ExternalData b) => a != b, // It's unnecessary in this case
+      builder: (_, data, __) => _build(data),
     );
   }
 }

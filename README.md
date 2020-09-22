@@ -1,16 +1,17 @@
 # chess
 
-A new Flutter project.
+Real Realtime Chess
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Setup
 
-A few resources to get you started if this is your first Flutter project:
+1) You need to run `dart setup.dart`.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+2) Fill up config for your environment (development/production/test)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Run
+
+For development run `flutter lib/main-dev.dart` or launch `Chess:dev` if you use VSCode
+
+For production run `flutter lib/main.dart` or launch `Chess` if you use VSCode

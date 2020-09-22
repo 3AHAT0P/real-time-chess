@@ -1,0 +1,5 @@
+part of 'base.dart';
+
+class _{{ENVIRONMENT}}ApplicationConfig implements ApplicationConfig {
+  final Environment environment = Environment.{{environment}};
+}

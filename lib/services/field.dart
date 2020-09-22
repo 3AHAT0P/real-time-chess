@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:chess/models/main.dart';
 import 'package:chess/utils/main.dart';
 
-Map<CellCoordinate, Figure> defaultFigurePlacement = {
+Map<CellCoordinate, Figure> _defaultFigurePlacement = {
   CellCoordinate.fromString('A1'): new Rook(color: FigureColor.white),
   CellCoordinate.fromString('B1'): new Knight(color: FigureColor.white),
   CellCoordinate.fromString('C1'): new Bishop(color: FigureColor.white),
@@ -41,6 +41,8 @@ Map<CellCoordinate, Figure> defaultFigurePlacement = {
   CellCoordinate.fromString('H8'): new Rook(color: FigureColor.black),
 };
 
+final _buildDefaultFigurePlacement = () => new Map<CellCoordinate, Figure>.from(_defaultFigurePlacement);
+
 class FieldItem {
   FieldItem({ this.position, this.key });
 
@@ -56,7 +58,7 @@ List<FieldItem> items = List.generate(64, (index) {
 });
 
 class GameService with ChangeNotifier {
-  Map<CellCoordinate, Figure> _figuresPlacement = new Map<CellCoordinate, Figure>.from(defaultFigurePlacement);
+  Map<CellCoordinate, Figure> _figuresPlacement = _buildDefaultFigurePlacement();
 
   CellCoordinate _selectedIndex;
   Map<CellCoordinate, FigureAction> _movePossiblePositions = new Map<CellCoordinate, FigureAction>();
@@ -94,7 +96,7 @@ class GameService with ChangeNotifier {
   }
 
   void newGame() {
-    _figuresPlacement = defaultFigurePlacement;
+    _figuresPlacement = _buildDefaultFigurePlacement();
     _selectedIndex = null;
     _movePossiblePositions = new Map<CellCoordinate, FigureAction>();
 
